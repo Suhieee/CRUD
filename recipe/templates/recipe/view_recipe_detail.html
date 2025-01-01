@@ -1,0 +1,255 @@
+{% extends 'core/base.html' %}
+{% block title %} {{title}} {% endblock %}
+{% block content %}
+<div class="max-w-screen-xl mx-auto p-6 md:px-10 rounded-md">
+    <h1 class="mb-10 text-2xl font-bold text-center">Recipe Details</h1>
+    <div class="grid md:grid-cols-2 gap-6">
+        <!--Left-->
+        <div class="md:col-span-1">
+            <img src="{{ recipe.image.url }}" alt="Recipe Image">
+        </div>
+        <!--Right-->
+        <div class="md:col-span-1">
+
+                <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+                    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
+                        <li class="me-2" role="presentation">
+                            <button class="inline-block p-4 border-b-2 rounded-t-lg" id="detail-tab" data-tabs-target="#detail" type="button" role="tab" aria-controls="detail" aria-selected="false">Detail</button>
+                        </li>
+                        <li class="me-2" role="presentation">
+                            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="description-tab" data-tabs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="false">Description</button>
+                        </li>
+                        <li class="me-2" role="presentation">
+                            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="ingredients-tab" data-tabs-target="#ingredients" type="button" role="tab" aria-controls="ingredients" aria-selected="false">Ingredients</button>
+                        </li>
+                        <li role="presentation">
+                            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="instructions-tab" data-tabs-target="#instructions" type="button" role="tab" aria-controls="instructions" aria-selected="false">Instruction</button>
+                        </li>
+                        <li role="presentation">
+                            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="profile-tab" data-tabs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
+                        </li>
+                        {% if request.user == recipe.created_by %}
+                        <li role="presentation">
+                            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="action-tab" data-tabs-target="#action" type="button" role="tab" aria-controls="action" aria-selected="false">Action</button>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div id="default-tab-content">
+                    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="detail" role="tabpanel" aria-labelledby="detail-tab">
+                        <div class="flex flex-col">
+                            <div>
+                                <h1 class="text-lg font-normal text-gray-800">Name : {{ recipe.name }}</h1>
+                            </div>
+                            <div>
+                                <h1 class="text-lg font-normal text-gray-800">Cooking Time : {{ recipe.cook_time }}</h1>
+                            </div>
+                            <div>
+                                <h1 class="text-lg font-normal text-gray-800">Serving : {{ recipe.serving }}</h1>
+                            </div>
+
+                            {% if request.user == recipe.created_by %}
+                            <div class="flex items-center space-x-3 pt-5">
+                                <!-- Delete Button -->
+                                <a href="{% url 'recipe:delete_recipe' pk=recipe.id %}" 
+                                id="delete-button" 
+                                class="bg-red-500 hover:bg-red-600 text-white border border-red-600 rounded-full px-2 py-1 flex items-center space-x-1 focus:ring-red-200 focus:ring-2 focus:outline-none"
+                              >
+                                <!-- Trash Icon -->
+                                <div class="flex items-center justify-center w-6 h-6 rounded-full bg-red-600">
+                                    <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                              d="M3 6h18M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2m5 0v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6h16Z"/>
+                                    </svg>
+                                </div>
+                                <span class="font-medium text-sm">Delete</span>
+                             </a>
+                             
+                             
+                            
+                                <!-- Edit Button -->
+                                <a href="{% url 'recipe:update_recipe' pk=recipe.id %}" 
+                                id="edit-button" 
+                                class="bg-blue-500 hover:bg-blue-600 text-white border border-blue-600 rounded-full px-2 py-1 flex items-center space-x-1 focus:ring-blue-200 focus:ring-2 focus:outline-none">
+                                <!-- Edit Icon -->
+                                <div class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-600">
+                                    <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                              d="M12.7 3.3L20.7 11.3M11 5l-6.5 6.5c-.8.8-1.5 2-1.5 2.5L3 18l4.5-1s1.7-.7 2.5-1.5L19 8m0-5.5a2.5 2.5 0 0 1 0 5.5M16.5 1.5a2.5 2.5 0 1 1 5 0"/>
+                                    </svg>
+                                </div>
+                                <span class="font-medium text-sm">Edit</span>
+                             </a>
+                             
+                            </div>
+                             
+                            
+                            {% endif %}
+                            
+                        </div>
+                    </div>
+                    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="description" role="tabpanel" aria-labelledby="description-tab">
+                        <p class="text-lg font-normal text-gray-600 dark:text-gray-800">{{ recipe.description }}</p>
+                    </div>
+                    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="ingredients" role="tabpanel" aria-labelledby="ingredients-tab">
+
+                        {% if ingredients %}
+                                <div class="relative overflow-x shadow-md sm:rounded-lg">
+                                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                            <tr>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Quantity
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Metric
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                   Ingredients
+                                                </th>
+                                                {% if request.user == recipe.created_by %}
+                                                <th scope="col" class="px-6 py-3">
+                                                    <span class="">Action</span>
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    <span class="">Action</span>
+                                                </th>
+                                                {% endif %}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for ingredient in ingredients %}
+                                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                   {{ ingredient.quantity }}
+                                                </th>
+                                                <td class="px-6 py-4">
+                                                    {{ ingredient.metric }}
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    {{ ingredient.name }}
+                                                </td>
+                                                {% if request.user == recipe.created_by %}
+                                                <td class="px-6 py-4 text-right">
+                                                    <a href="{% url 'recipe:update_ingredient' recipe_primary_key=recipe.id pk=ingredient.id %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Update</a>
+                                                </td>
+                                                <td class="px-6 py-4 text-right">
+                                                    <a href="{% url 'recipe:delete_ingredient' recipe_primary_key=recipe.id pk=ingredient.id %}" class="font-medium text-red-600 dark:text-blue-500 hover:underline">Delete</a>
+                                                </td>                                                
+                                                {% endif %}
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                        {% endif %}
+
+                    </div>
+                    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="instructions" role="tabpanel" aria-labelledby="instructions-tab">
+
+                        {% if instructions %}
+                                <div class="relative overflow-x shadow-md sm:rounded-lg">
+                                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                            <tr>
+                                                <th scope="col" class="px-6 py-3">
+                                                   Step Number
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Instruction
+                                                </th>
+                                                {% if request.user == recipe.created_by %}
+                                                <th scope="col" class="px-6 py-3">
+                                                    <span class="">Action</span>
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    <span class="">Action</span>
+                                                </th>
+                                                {% endif %}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for instruction in instructions %}
+                                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                    {{ instruction.step_number }}
+                                                </th>
+                                                <td class="px-6 py-4">
+                                                    {{ instruction.instruction_text }}
+                                                </td>
+                                                {% if request.user == recipe.created_by %}
+                                                <td class="px-6 py-4 text-right">
+                                                    <a href="{% url 'recipe:update_instruction' recipe_primary_key=recipe.id instruction_primary_key=instruction.id %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Update</a>
+                                                </td>
+                                                <td class="px-6 py-4 text-right">
+                                                    <a href="{% url 'recipe:delete_instruction' recipe_primary_key=recipe.id instruction_primary_key=instruction.id %}" class="font-medium text-red-600 dark:text-blue-500 hover:underline">Delete</a>
+                                                </td>
+                                                {% endif %}
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                    {% endif %}
+                </div>
+                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="flex flex-row items-center space-x-6 p-4 bg-gray-200 dark:bg-gray-800 rounded-lg">
+                        <!-- Profile Image on the Left -->
+                        <div>
+                            <img class="w-48 h-48 rounded-full shadow-lg" src="{{ recipe.created_by.profile.image.url }}" alt="Creator's profile image"/>
+                        </div>
+                        
+                        <!-- Profile Information on the Right -->
+                        <div class="flex flex-col">
+                            <h5 class="text-xl font-medium text-gray-900 dark:text-white">{{ recipe.created_by.first_name }} {{ recipe.created_by.last_name }}</h5>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">@{{ recipe.created_by.username }}</span>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">{{ recipe.created_by.email }}</span>
+                        </div>
+                    </div>
+                    
+                    </div>
+
+                    <div class="hidden p-4 rounded-lg pb-2 bg-gray-50 dark:bg-gray-800 mt-4" id="action" role="tabpanel" aria-labelledby="action-tab">
+                        <a href="{% url 'recipe:create_ingredient' recipe_primary_key=recipe.id %}" id="increment-button" data-input-counter-increment="quantity-input"
+                    class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 border border-gray-300 rounded-full px-4 py-2 flex items-center space-x-2 focus:ring-black-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none mb-4 mt-4">  <!-- Added mt-4 -->
+                    <!-- Plus Icon -->
+                    <div class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700">
+                        <svg class="w-5 h-5 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
+                        </svg>
+                    </div>
+                    <!-- Text -->
+                    <span class="text-gray-900 dark:text-white font-medium">Add Ingredients</span>
+                </a>
+
+                <a href="{% url 'recipe:create_instruction' recipe_primary_key=recipe.id %}" id="increment-button" data-input-counter-increment="quantity-input"
+                    class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 border border-gray-300 rounded-full px-4 py-2 flex items-center space-x-2 focus:ring-black-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none mb-4">
+                    <!-- Plus Icon -->
+                    <div class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700">
+                        <svg class="w-5 h-5 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
+                        </svg>
+                    </div>
+                    <!-- Text -->
+                    <span class="text-gray-900 dark:text-white font-medium">Add Instruction</span>
+                </a>
+
+                <a href="{% url 'recipe:update_recipe' pk=recipe.id %}" id="increment-button" data-input-counter-increment="quantity-input"
+                class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 border border-gray-300 rounded-full px-4 py-2 flex items-center space-x-2 focus:ring-black-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
+                <!-- Plus Icon -->
+                <div class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700">
+                    <svg class="w-5 h-5 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
+                    </svg>
+                </div>
+                <!-- Text -->
+                <span class="text-gray-900 dark:text-white font-medium">Update Recipe</span>
+            </a>            
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
